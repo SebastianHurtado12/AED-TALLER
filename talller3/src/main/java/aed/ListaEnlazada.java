@@ -29,10 +29,12 @@ public class ListaEnlazada<T> implements Secuencia<T> {
 
     public void agregarAdelante(T elem) {
         Nodo<T> nuevoNodo = new Nodo<T>(elem);
+        if(this.primerNodo != null){    
+            this.primerNodo.ant = nuevoNodo;
+        }
         nuevoNodo.sig = this.primerNodo;
         primerNodo = nuevoNodo;
         longitudLista += 1;
-        
     }
 
     public void agregarAtras(T elem) {
@@ -44,7 +46,9 @@ public class ListaEnlazada<T> implements Secuencia<T> {
             while(actualNodo.sig != null){
                 actualNodo = actualNodo.sig;
             }
+            nuevoNodo.ant = actualNodo;
             actualNodo.sig = nuevoNodo;
+
         }
         longitudLista += 1;
     }
@@ -62,19 +66,28 @@ public class ListaEnlazada<T> implements Secuencia<T> {
     }
 
     public void eliminar(int i) {
+        Nodo<T> ant = primerNodo;
         Nodo<T> actualNodo = primerNodo;
-        Nodo<T> prev = primerNodo;
+        Nodo<T> sig = primerNodo;
         int j = 0;
 
         while(j!=i){
-            prev = actualNodo;
+            ant = actualNodo;
             actualNodo = actualNodo.sig;
+            sig = actualNodo.sig;
             j++;
         }
-        if(i==0){   
+
+        if(i==0) {
             primerNodo = actualNodo.sig;
-        }else{
-            prev.sig = actualNodo.sig;
+            if(primerNodo != null){
+                primerNodo.ant = null;
+            }
+        } else {
+            ant.sig = sig;
+            if(sig != null){
+                sig.ant = ant.sig;
+            }
         }
         longitudLista -= 1;
     }
@@ -110,7 +123,6 @@ public class ListaEnlazada<T> implements Secuencia<T> {
             actual = actual.sig;
         }
         res += "]";
-        //formato [4,1,2]
         return res;
     }
 
